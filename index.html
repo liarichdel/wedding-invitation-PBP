@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pernikahan Ryu Sunjae &amp; Im sol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <!-- Three.js sebagai ES module (r160). -->
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+</head>
+<body class="is-locked">
+  <!-- fallback 2D bila WebGL tidak tersedia-->
+  <div id="bg-fallback" aria-hidden="true"></div>
+  <canvas id="scene" aria-hidden="true"></canvas>
+
+  <!-- COVER -->
+  <section id="cover">
+    <div class="cover-bg img-fb">
+      <!-- Foto latar cover (prewedding landscape, tone hangat, rasio 16:9) -->
+      <img src="assets/images/cover-bg.jpg" alt="" onerror="this.style.display='none'">
+    </div>
+    <div class="cover-box text-center">
+      <p class="eyebrow">The Wedding of</p>
+      <h1 class="display">Sunjae &amp; Im sol</h1>
+      <!-- Amplop CSS -->
+      <div class="env-wrap">
+        <div class="envelope" id="envelope">
+          <div class="env-back"></div>
+          <div class="env-card"><small>Undangan Pernikahan</small><span class="display">R &amp; S</span><small>20 · 12 · 2026</small></div>
+          <div class="env-front"></div>
+          <div class="env-flap"></div>
+          <div class="seal">R&amp;S</div>
+        </div>
+      </div>
+      <p class="body-text mb-1">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+      <h2 class="display guest"><span id="guest-name">Tamu Undangan</span></h2>
+      <button id="open-btn" class="btn-block">Buka Undangan</button>
+    </div>
+  </section>
+
+  <button id="music-btn" class="music-btn" aria-label="Matikan musik" hidden>
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" shape-rendering="crispEdges">
+      <path d="M3 9h4l5-4v14l-5-4H3z"/>
+      <g id="wave-on"><path d="M16 9v6M19 6v12"/></g>
+      <g id="wave-off" style="display:none"><path d="M16 9l5 6M21 9l-5 6"/></g>
+    </svg>
+  </button>
+  <audio id="bgm" src="assets/audio/bgm.mp3" loop preload="auto"></audio>
+
+  <!-- Mode Fokus 3D -->
+  <button id="focus-btn" class="focus-btn" hidden>Mode 3D</button>
+  <div class="focus-bar" role="toolbar" aria-label="Kamera 3D">
+    <button class="btn-block sm" data-cmd="couple">Pengantin</button>
+    <button class="btn-block sm" data-cmd="altar">Altar</button>
+    <button class="btn-block sm" data-cmd="all">Panorama</button>
+    <button class="btn-block sm" data-cmd="frame:prev">‹ Foto</button>
+    <button class="btn-block sm" data-cmd="frame:next">Foto ›</button>
+  </div>
+
+  <main id="main" class="container-xl">
+
+    <!-- OPENING -->
+    <section class="sec" id="opening">
+      <div class="panel col-lg-7 mx-auto text-center">
+        <p class="quote">“A good marriage is one which allows for change and growth in the individuals and in the way they express their love.”</p>
+        <p class="eyebrow">-Pearl S. Buck </p>
+        <p class="body-text">Dengan memohon rahmat Tuhan YME, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan mendoakan hari bahagia kami.</p>
+      </div>
+    </section>
+
+    <!-- MEMPELAI -->
+    <section class="sec" id="mempelai">
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-5">
+          <article class="panel tilt text-center">
+            <div class="photo img-fb">
+              <!-- Foto mempelai pria -->
+              <img src="assets/images/BWS.jpg" alt="Ryu Sun-Jae" onerror="this.style.display='none'">
+            </div>
+            <h3 class="display">Ryu Sun-Jae, S.E.</h3>
+            <p class="body-text">Putra pertama Bapak Bambang Nugraha &amp; Ibu Ratna Wulandari</p>
+          </article>
+        </div>
+        <div class="col-md-5">
+          <article class="panel tilt text-center">
+            <div class="photo img-fb">
+              <!-- Foto mempelai wanita -->
+              <img src="assets/images/Im sol.jpg" alt="Im Sol" onerror="this.style.display='none'">
+            </div>
+            <h3 class="display">Im Sol, S.Kom.</h3>
+            <p class="body-text">Putri kedua Bapak Agus Santoso &amp; Ibu Endang Puspitasari</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TANGGAL -->
+    <section class="sec" id="countdown-sec">
+      <div class="panel col-lg-8 mx-auto text-center">
+        <h2 class="display h-lg">Save The Date</h2>
+        <p class="eyebrow">Sabtu, 20 Desember 2026</p>
+        <div class="clock" id="countdown">
+          <div class="unit"><span class="digits" data-u="d">00</span><small>Hari</small></div>
+          <div class="unit"><span class="digits" data-u="h">00</span><small>Jam</small></div>
+          <div class="unit"><span class="digits" data-u="m">00</span><small>Menit</small></div>
+          <div class="unit"><span class="digits" data-u="s">00</span><small>Detik</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACARA -->
+    <section class="sec" id="acara">
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-5">
+          <article class="panel event tilt">
+            <h3 class="display">Akad Nikah</h3>
+            <p class="accent">Sabtu, 20 Desember 2026 · 08.00 WIB</p>
+            <p class="body-text"><strong>Masjid Al-Akbar Surabaya</strong><br>Jl. Masjid Al-Akbar Timur No. 1, Gayungan, Surabaya</p>
+          </article>
+        </div>
+        <div class="col-md-5">
+          <article class="panel event tilt">
+            <h3 class="display">Resepsi</h3>
+            <p class="accent">Sabtu, 20 Desember 2026 · 11.00 WIB</p>
+            <p class="body-text"><strong>Ballroom Hotel Majapahit</strong><br>Jl. Tunjungan No. 65, Genteng, Surabaya</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOMEN KAMI: galeri 3D. -->
+    <section class="sec" id="gallery">
+      <div class="gal-head panel">
+        <h2 class="display h-lg">Momen Kami</h2>
+        <p class="body-text mb-0">Ketuk bingkai foto di scene 3D untuk melihat lebih dekat.</p>
+      </div>
+      <div class="gal-ui panel">
+        <p class="accent" id="gal-caption">Pilih sebuah bingkai</p>
+        <div class="d-flex gap-2 justify-content-center flex-wrap">
+          <button class="btn-block" data-cmd="frame:prev">‹ Sebelumnya</button>
+          <button class="btn-block" data-cmd="frame:next">Berikutnya ›</button>
+          <button class="btn-block" data-cmd="frame:close">Lihat semua</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RSVP -->
+    <section class="sec" id="rsvp">
+      <div class="col-lg-6 mx-auto">
+        <form id="rsvp-form" class="panel" novalidate>
+          <h2 class="display h-lg text-center">Konfirmasi &amp; Ucapan</h2>
+          <label for="f-nama">Nama</label>
+          <input id="f-nama" class="field" required placeholder="Nama lengkap Anda">
+          <label for="f-hadir">Kehadiran</label>
+          <select id="f-hadir" class="field"><option>Hadir</option><option>Berhalangan hadir</option><option>Masih ragu</option></select>
+          <label for="f-pesan">Ucapan &amp; doa</label>
+          <textarea id="f-pesan" class="field" rows="3" required placeholder="Tuliskan doa terbaik untuk kami"></textarea>
+          <button class="btn-block w-100 mt-3" type="submit">Kirim ucapan</button>
+        </form>
+        <ul id="wish-list" class="wish-list"></ul>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="sec" id="footer">
+      <div class="panel col-lg-6 mx-auto text-center">
+        <p class="body-text">Hadiah dapat dikirim ke:</p>
+        <p class="accent mb-1">Bank BCA a.n. Ryu Sun-Jae</p>
+        <p class="display acc" id="acc-number">7731 2208 54</p>
+        <button class="btn-block" id="copy-btn">Copy Nomor Rekening</button>
+        <p class="credits">Dengan cinta, Sunjae &amp; Im sol · Undangan digital 2026</p>
+      </div>
+    </footer>
+  </main>
+
+  <div id="hint" class="hint" aria-hidden="true">Geser untuk melihat sekeliling · Ketuk pengantin, altar &amp; bunga</div>
+  <div id="toast" class="toast-lux" role="status"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="scene.js"></script>
+</body>
+</html>
