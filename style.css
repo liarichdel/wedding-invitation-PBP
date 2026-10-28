@@ -74,8 +74,6 @@ body.no-webgl #scene{display:none}
 .digits::after{content:"";position:absolute;left:0;right:0;top:50%;height:3px;background:#000;opacity:.7}
 .unit small{margin-top:.8rem;color:var(--muted)}
 
-/* galery */
-
 /* RSVP */
 label{display:block;margin:1rem 0 .3rem;color:var(--accent);font-size:.85rem;letter-spacing:.08em}
 .field{width:100%;background:rgba(0,0,0,.35);border:2px solid var(--accent);border-radius:0;color:var(--pearl);padding:.7rem .9rem;font:inherit}
