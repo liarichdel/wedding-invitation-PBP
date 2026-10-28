@@ -3,7 +3,7 @@ import * as THREE from 'three';
 const { gsap, ScrollTrigger } = window;
 const C = { sapphire: 0x0f2f7a, sapphireLight: 0x2557c4, accent: 0xcfe0ff, pearl: 0xf6f3ec, navy: 0x0c1840, skin: 0xe8b890, grey: 0xC7C6C1, cream: 0xF0E3CE };
 
-/* deteksi device abilitynya */
+// deteksi device abilitynya 
 const hasWebGL = () => {
   try { const c = document.createElement('canvas');
     return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); }
@@ -13,8 +13,8 @@ const hasWebGL = () => {
 const LOW = innerWidth < 768 || (navigator.hardwareConcurrency || 4) <= 4;
 
 if (!hasWebGL()) {
-  document.body.classList.add('no-webgl');          // CSS menampilkan background 2D
-  window.dispatchEvent(new Event('scene-fallback')); // script.js membuat partikel CSS
+  document.body.classList.add('no-webgl');         
+  window.dispatchEvent(new Event('scene-fallback')); 
 } else init();
 
 function init() {
@@ -31,7 +31,7 @@ function init() {
   scene.fog = new THREE.Fog(0x071a45, 22, 55);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
 
-  // helper voxel (hemat memori)
+  // helper voxel agar hemat memori
   const BOX = new THREE.BoxGeometry(1, 1, 1);
   const mats = {};
   // device lemah tetap Standard
@@ -128,7 +128,7 @@ function init() {
 
   // pencahayaan 
   scene.add(new THREE.AmbientLight(0xdbe7ff, 0.7));
-  const sun = new THREE.DirectionalLight(0xeaf2ff, 2.2); // hangat, pemberi bayangan
+  const sun = new THREE.DirectionalLight(0xeaf2ff, 2.2); 
   sun.position.set(8, 14, 10);
   if (!LOW) {
     sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
@@ -145,18 +145,18 @@ function init() {
     gallery:  { angle: 0,    radius: 24, height: 9,   tx: 0, ty: 2.5, tz: -2 }    // mundur, lihat seluruh scene
   };
   const rig = { ...KEY.cover };
-  let K = 1; // pengali radius agar scene tetap muat di layar portrait
+  let K = 1; 
   const user = { yaw: 0, pitch: 0, zoom: 0 }, mouse = { x: 0, y: 0 };
   // override kamera, memadukan kamera scroll dengan titik fokus (bingkai foto / preset)
   const focus = { w: 0, pos: new THREE.Vector3(), tgt: new THREE.Vector3(), cur: -1 };
   const tg = new THREE.Vector3();
   const applyRig = (t) => {
-    const a = rig.angle + Math.sin(t * 0.3) * 0.04 + user.yaw + mouse.x;  // ayunan idle + offset interaksi
+    const a = rig.angle + Math.sin(t * 0.3) * 0.04 + user.yaw + mouse.x; 
     camera.position.set(rig.tx + Math.sin(a) * rig.radius * K, rig.height + user.pitch + mouse.y, rig.tz + Math.cos(a) * rig.radius * K);
     tg.set(rig.tx, rig.ty, rig.tz);
     if (focus.w > 0.001) {
       camera.position.lerp(focus.pos, focus.w); tg.lerp(focus.tgt, focus.w);
-      camera.position.x += (user.yaw + mouse.x) * focus.w * 2;           // parallax kecil saat fokus
+      camera.position.x += (user.yaw + mouse.x) * focus.w * 2;        
       camera.position.y += (user.pitch + mouse.y) * focus.w * 0.3;
     }
     if (user.zoom) camera.position.sub(tg).multiplyScalar(1 + user.zoom).add(tg); // zoom mendekat/menjauh dari target
@@ -171,7 +171,6 @@ function init() {
     gsap.fromTo(rig, { ...KEY[from] }, { ...KEY[to], ease: 'power2.inOut', immediateRender: false,
       scrollTrigger: { trigger, start, end, scrub: 1.2 } }));
 
-  // saat undangan dibuka: dolly-in sinematik singkat
   window.addEventListener('invitation-open', () =>
     gsap.from(rig, { radius: KEY.cover.radius + 5, height: KEY.cover.height + 2, duration: 2.6, ease: 'power2.out' }));
 
@@ -241,12 +240,12 @@ function init() {
       focus.cur = -1; emit(); flyTo(t.clone().add(p.sub(t).multiplyScalar(K)), t);
     } else if (c === 'frame:next') openFrame(focus.cur + 1);
     else if (c === 'frame:prev') openFrame(focus.cur < 0 ? FRAMES.length - 1 : focus.cur - 1);
-    else release();                                        // 'frame:close' atau 'release'
+    else release();                                       
   });
-  // keluar dari galeri saat scroll menjauh (hanya di luar mode fokus)
+  // keluar dari galeri saat scroll menjauh
   const leaveGallery = () => { if (!document.body.classList.contains('focus-mode') && focus.w > 0) release(); };
   ScrollTrigger.create({ trigger: '#gallery', start: 'top 70%', end: 'bottom 30%', onLeave: leaveGallery, onLeaveBack: leaveGallery });
-  // Zoom dengan scroll wheel hanya saat mode fokus (halaman terkunci)
+  // Zoom dengan scroll wheel hanya saat mode fokus
   addEventListener('wheel', (e) => {
     if (!document.body.classList.contains('focus-mode')) return;
     e.preventDefault(); user.zoom = gsap.utils.clamp(-0.45, 0.6, user.zoom + e.deltaY * 0.0008);
@@ -314,7 +313,6 @@ function init() {
     } else burst(point, 14, 0.6); // lantai
   };
 
-  // Raycast, objek ber-userData.kind terdekat dari titik pointer
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), targets = [groom, bride, altar, flowers, floor, frameGroup];
   const pick = (e) => {
     ndc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
@@ -381,7 +379,7 @@ function init() {
     }
     particles.instanceMatrix.needsUpdate = true;
     glow.intensity = 45 + Math.sin(t * 1.5) * 6 + fx.flare;
-    frames.forEach((g, i) => { g.position.y = g.userData.baseY + Math.sin(t * 1.2 + i) * 0.12; }); // bingkai melayang         // cahaya biru muda berdenyut
+    frames.forEach((g, i) => { g.position.y = g.userData.baseY + Math.sin(t * 1.2 + i) * 0.12; }); 
     applyRig(t);
     renderer.render(scene, camera);
   })();
