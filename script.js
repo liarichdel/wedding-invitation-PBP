@@ -32,15 +32,13 @@
   musicBtn.addEventListener('click', () => {
     if (bgm.paused) { bgm.play().catch(() => {}); setIcon(true); } else { bgm.pause(); setIcon(false); }
   });
-
-  // buka undangan ada audio + sembunyikan cover + sinyal ke scene nya 
+ 
   gsap.from('.cover-box > *', { y: 30, opacity: 0, stagger: .12, duration: 1.1, ease: 'power3.out' });
   gsap.to('.envelope', { y: -6, repeat: -1, yoyo: true, duration: 2, ease: 'sine.inOut' });
 
   let opened = false;
   $('#open-btn').addEventListener('click', () => {
     if (opened) return; opened = true;
-    // Audio wajib dimulai sinkron di dalam klik (autoplay policy)
     bgm.volume = 0;
     bgm.play().then(() => gsap.to(bgm, { volume: .6, duration: 3 })).catch(() => {});
     musicBtn.hidden = false; setIcon(true);
