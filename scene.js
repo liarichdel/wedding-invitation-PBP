@@ -9,7 +9,6 @@ const hasWebGL = () => {
     return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); }
   catch { return false; }
 };
-// LOW = HP / CPU lemah antisipasinya partikel dikurangi, shadow dimatikan, pixel ratio ditekan
 const LOW = innerWidth < 768 || (navigator.hardwareConcurrency || 4) <= 4;
 
 if (!hasWebGL()) {
@@ -78,7 +77,7 @@ function init() {
   const person = (bride) => {
     const g = new THREE.Group(), hair = bride ? 0x5a3a22 : 0x2b1b12;
     if (bride) {
-      [1.7, 1.35, 1.0].forEach((w, i) => vox(g, C.pearl, w, 0.45, w * 0.8, 0, 0.25 + i * 0.45, 0)); // gaun bertingkat
+      [1.7, 1.35, 1.0].forEach((w, i) => vox(g, C.pearl, w, 0.45, w * 0.8, 0, 0.25 + i * 0.45, 0)); // gaun 
       vox(g, C.pearl, 0.9, 0.8, 0.55, 0, 1.75, 0);
       vox(g, C.skin, 0.26, 0.8, 0.28, -0.6, 1.75, 0); vox(g, C.skin, 0.26, 0.8, 0.28, 0.6, 1.75, 0);
       vox(g, hair, 0.86, 0.9, 0.2, 0, 2.45, -0.3);       // rambut panjang
@@ -90,9 +89,9 @@ function init() {
       vox(g, C.accent, 0.18, 0.7, 0.05, 0, 1.6, 0.33);     // dasi biru muda
       vox(g, C.navy, 0.28, 1, 0.3, -0.65, 1.5, 0); vox(g, C.navy, 0.28, 1, 0.3, 0.65, 1.5, 0);
     }
-    vox(g, C.skin, 0.8, 0.8, 0.8, 0, 2.55, 0);           // kepala kotak tanpa wajah
+    vox(g, C.skin, 0.8, 0.8, 0.8, 0, 2.55, 0);           // kepala 
     vox(g, hair, 0.86, 0.3, 0.86, 0, 2.95, 0);
-    if (bride) vox(g, C.accent, 0.6, 0.12, 0.1, 0, 3.15, 0.3); // tiara
+    if (bride) vox(g, C.accent, 0.6, 0.12, 0.1, 0, 3.15, 0.3); // mahkota
     return g;
   };
   const groom = person(false), bride = person(true);
@@ -101,7 +100,7 @@ function init() {
   scene.add(groom, bride);
   groom.userData = { kind: 'groom', hop: 0 }; bride.userData = { kind: 'bride', hop: 0 };
 
-  // bunga voxel (pearl & biru muda) di sekeliling altar 
+  // bunga voxel di sekeliling altar 
   const flowers = new THREE.Group(); scene.add(flowers);
   const flower = (x, z) => {
     const g = new THREE.Group(); g.position.set(x, 0, z);
@@ -147,7 +146,7 @@ function init() {
   const rig = { ...KEY.cover };
   let K = 1; 
   const user = { yaw: 0, pitch: 0, zoom: 0 }, mouse = { x: 0, y: 0 };
-  // override kamera, memadukan kamera scroll dengan titik fokus (bingkai foto / preset)
+  // override kamera
   const focus = { w: 0, pos: new THREE.Vector3(), tgt: new THREE.Vector3(), cur: -1 };
   const tg = new THREE.Vector3();
   const applyRig = (t) => {
@@ -163,7 +162,7 @@ function init() {
     camera.lookAt(tg);
   };
 
-  // tiap section menggerakkan rig dari keyframe sebelumnya ke berikutnya (scrub = terikat scroll)
+  // tiap section menggerakkan rig dari keyframe sebelumnya ke berikutnya
   gsap.registerPlugin(ScrollTrigger);
   [['#mempelai', 'cover', 'mempelai', 'top bottom', 'top 20%'],
    ['#acara', 'mempelai', 'acara', 'top bottom', 'top 20%'],
@@ -183,7 +182,7 @@ function init() {
     { src: 'assets/images/pict5.jpg', cap: 'Akhir pekan di Batu', x: 9.5, z: -4 },
     { src: 'assets/images/pict6.jpg', cap: 'Hari lamaran keluarga', x: 13, z: -1.5 }
   ];
-  const fallbackTex = (n) => { // tekstur gradien sapphire + pola kotak biru muda, digambar di canvas
+  const fallbackTex = (n) => { 
     const c = document.createElement('canvas'); c.width = 256; c.height = 320;
     const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 256, 320);
     gr.addColorStop(0, '#2557c4'); gr.addColorStop(0.6, '#0f2f7a'); gr.addColorStop(1, '#4a7fe0');
@@ -221,7 +220,7 @@ function init() {
     gsap.to(focus, { w: 1, duration: 1.6, ease: 'power2.inOut' });
     gsap.to(user, { zoom: 0, duration: 0.6 });
   };
-  const release = () => {                                  // kembali ke kamera scroll
+  const release = () => {                                
     gsap.killTweensOf([focus, focus.pos, focus.tgt]);
     gsap.to(focus, { w: 0, duration: 1.4, ease: 'power2.inOut' }); gsap.to(user, { zoom: 0, duration: 0.8 });
     focus.cur = -1; emit();
